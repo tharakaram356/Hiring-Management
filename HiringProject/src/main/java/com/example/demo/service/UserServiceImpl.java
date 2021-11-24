@@ -1,4 +1,4 @@
-package com.example.demo.service;
+/*package com.example.demo.service;
 
 import java.util.List;
 
@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 
-@Service
-@ControllerAdvice
-public class UserServiceImpl implements UserService{
+/*public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserRepository repository;
@@ -27,13 +26,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void create(User user) {
+	public void create(UserDto user) {
 	  repository.save(user);
 		
 	}
 
 	@Override
-	public User update(User user) {
+	public User update(UserDto user) {
 		// TODO Auto-generated method stub
 		return repository.save(user);
 	}
@@ -45,9 +44,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void delete(User user) {
+	public void delete(UserDto user) {
 		repository.delete(user);
 		
 	}
 
-}
+}*/

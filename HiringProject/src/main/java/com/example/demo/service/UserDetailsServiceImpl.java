@@ -12,11 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 @Service
 @ControllerAdvice
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService,UserService {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -45,8 +46,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 	
 	@Transactional
-	public User update(User user) {
-		return userRepository.save(user);
+	public User update(User userdto) {
+		return userRepository.save(userdto);
 	}
 	
 	@Transactional

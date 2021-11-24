@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserDetailsServiceImpl;
 
@@ -42,7 +43,7 @@ public class UserController {
     public ResponseEntity<?> create(@RequestBody User user) {
         detailsServiceImpl.create(user);
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 	
 	
