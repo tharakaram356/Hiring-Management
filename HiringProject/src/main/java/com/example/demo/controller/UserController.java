@@ -19,7 +19,6 @@ import com.example.demo.entity.User;
 import com.example.demo.service.UserDetailsServiceImpl;
 
 @RestController
-//@RequestMapping("api/v1")
 public class UserController {
 	
 
@@ -33,24 +32,18 @@ public class UserController {
 		this.detailsServiceImpl = detailsServiceImpl;
 	}
 	
-	/*@GetMapping(value="user")
-	public List<User> getUsers()
-	{
-		return detailsServiceImpl.getAll();
-	}*/
+
 	@GetMapping(value="/user")
     public List<User> getAll() {
         return detailsServiceImpl.getAll();
     }
-	/*@RequestMapping(value="/user",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/user",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<?> create(@RequestBody User user) {
         detailsServiceImpl.create(user);
         HttpHeaders headers = new HttpHeaders();
-        //Controller linkBuilder = linkTo(methodOn(UserDetailsServiceImpl.class).get(user.getId()));
-       // headers.setLocation(linkBuilder.toUri());
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
-    }*/
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+    }
 	
 	
 
