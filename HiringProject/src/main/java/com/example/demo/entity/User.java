@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +31,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "user_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_name" }) })
-@EqualsAndHashCode(of = "id")
+@Data
 @Getter
 @Setter
 public class User implements UserDetails, Serializable {
@@ -68,7 +70,7 @@ public class User implements UserDetails, Serializable {
 		inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	@OrderBy
 	@JsonIgnore
-	private Collection<Authority> authorities;
+	private List<Authority> authorities;
 	
 	
 	/*@OneToOne
