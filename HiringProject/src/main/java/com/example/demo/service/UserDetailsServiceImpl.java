@@ -6,12 +6,16 @@ package com.example.demo.service;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,11 +25,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.entity.Authority;
+import com.example.demo.entity.AuthorityType;
 import com.example.demo.entity.User;
 import com.example.demo.exception.CustomException;
 import com.example.demo.repository.AuthorityRepository;
 import com.example.demo.repository.UserRepository;
+
+import lombok.var;
 
 @Service
 @ControllerAdvice
@@ -52,6 +60,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,UserService
 		throw new UsernameNotFoundException(username);
 	}
 	
+
+	
 	@Transactional(readOnly = true)
 	 public List<User> getAll() {
 		 return userRepository.findAll();
@@ -59,33 +69,41 @@ public class UserDetailsServiceImpl implements UserDetailsService,UserService
 	
 
 	@Override
-    public User create(User user) 
+	@Transactional
+    public User create(UserDto userdto) 
 	{
-        User userWithDuplicateUsername = userRepository.findByUsername(user.getUsername());
-        if(userWithDuplicateUsername != null && user.getId()!=userWithDuplicateUsername.getId()) {
-                     throw new CustomException("Duplicate username.:" +user.getUsername());
+        User userWithDuplicateUsername = userRepository.findByUsername(userdto.getUsername());
+        if(userWithDuplicateUsername != null && userdto.getId()!=userWithDuplicateUsername.getId()) {
+            throw new CustomException("Duplicate username.:" +userdto.getUsername());
         }
-        
-        
-        
-        User user1 = new User();
-        user1.setEmailId(user.getEmailId());
-        user1.setFirstName(user.getFirstName());
-        user1.setLastName(user.getLastName());
-        user1.setUsername(user.getUsername());
-        user1.setPassword(new BCryptPasswordEncoder(8).encode(user.getPassword()));
        
-      //  Authority authority=new Authority();
-        List<Object> list=new ArrayList<>();
-        //list.add(user.getAuthorities());
-        //authority.setName(user.getAuthorities());
-         user.getAuthorities().stream().map(role->list.add(role));
-        Authority authority=new Authority();
-        authority.setName(user.getAuthorities().toString());
-        authorityRepository.save(authority);
-        user1.setAuthorities(user.getAuthorities());
+       
+      
+        User user1 = new User();
+        user1.setEmailId(userdto.getEmailId());
+       // System.out.println("email ID"+userdto.getEmailId());
+        user1.setFirstName(userdto.getFirstName());
+        //System.out.println("firstName"+userdto.getFirstName());
+        user1.setLastName(userdto.getLastName());
+       // System.out.println("lastName"+userdto.getLastName());
+        user1.setUsername(userdto.getUsername());
+       // System.out.println("userName"+userdto.getUsername());
+        user1.setPassword(new BCryptPasswordEncoder(8).encode(userdto.getPassword()));
+        System.out.println("password"+userdto.getPassword());
+
+        
+        user1.setAuthorities(authorityRepository.find(userdto.getRole()));
+     
+        System.out.println("Authority"+userdto.getRole());
+        System.out.println(userdto.getId());
         userRepository.save(user1);
-        return user;
+       Authority authority=new Authority();
+       
+         authority.setName(userdto.getRole().toString());
+        // authority.setId(userdto.getId());
+         System.out.println(authority.getId()+"Authority Id");
+         authorityRepository.save(authority);
+        return user1;
     }
 	
 	@Transactional
@@ -101,6 +119,8 @@ public class UserDetailsServiceImpl implements UserDetailsService,UserService
 	public void delete(User user) {
 		userRepository.delete(user);
 	}
+	
+	//final var user = (User) event.getSource();
 
 }
 

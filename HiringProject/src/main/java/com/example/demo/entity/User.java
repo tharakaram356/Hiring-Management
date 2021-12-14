@@ -3,7 +3,10 @@ package com.example.demo.entity;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,19 +16,26 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.demo.dto.AuthorityDto;
+import com.example.demo.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -34,6 +44,9 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class User implements UserDetails, Serializable {
 
 	/**
@@ -42,7 +55,8 @@ public class User implements UserDetails, Serializable {
 	private static final long serialVersionUID = 3903243335716548729L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE
+	, generator = "user_sequence")
 	@SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
 	@Column(name = "id")
 	private Integer id;
@@ -64,7 +78,7 @@ public class User implements UserDetails, Serializable {
 	
 	
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable(name = "user_authority", 
 		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
 		inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
@@ -72,10 +86,14 @@ public class User implements UserDetails, Serializable {
 	@JsonIgnore
 	private List<Authority> authorities;
 	
-	
-	/*@OneToOne
+	 
+	@OneToOne
 	@JoinColumn
-	private Applicants applicants;*/
+	private Company company;
+	
+	@OneToOne
+	@JoinColumn
+	private Applicants applicants;
 
 
 	@Override
@@ -97,6 +115,12 @@ public class User implements UserDetails, Serializable {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	
 
 
 

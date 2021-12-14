@@ -10,14 +10,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Entity
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Company {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="company_id")
+	@Column(name="company_id") 
 	private Long id;
 	@Column(name="company_name")
 	private String name;
